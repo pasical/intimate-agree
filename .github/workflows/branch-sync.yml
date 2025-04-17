@@ -4,9 +4,9 @@ name: 同步上游仓库
 on:
   # 允许手动在Actions页面触发
   workflow_dispatch:
-  # 定时触发（UTC时间），这里设置为每天凌晨2点（相当于北京时间上午10点）
+  # 定时触发
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 */4 * * *'
 
 jobs:
   sync-upstream:
