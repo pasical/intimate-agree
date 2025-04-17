@@ -1,0 +1,51 @@
+name: 同步上游仓库
+
+# 触发条件：可以手动触发，也可以按计划自动运行
+on:
+  # 允许手动在Actions页面触发
+  workflow_dispatch:
+  # 定时触发（UTC时间），这里设置为每天凌晨2点（相当于北京时间上午10点）
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  sync-upstream:
+    name: 同步上游仓库变更
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步骤1: 检出您的fork仓库
+      - name: 检出当前仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整历史以便能够正确合并
+
+      # 步骤2: 添加上游仓库作为远程源
+      - name: 添加上游仓库
+        run: |
+          # 使用环境变量或直接填写上游仓库地址
+          # 格式: https://github.com/原作者/原仓库名.git
+          git remote add upstream ${{ secrets.UPSTREAM_REPO || 'https://github.com/123xiao/sex-agreement-app.git' }}
+          git fetch upstream
+
+      # 步骤3: 合并上游更改
+      - name: 合并上游更改
+        run: |
+          # 确保在您的主分支上（通常是main或master）
+          git checkout main
+          
+          # 尝试合并上游的主分支（假设是main，如果是master或其他请修改）
+          git merge upstream/main --no-edit
+          
+          # 如果有冲突，可以选择以上游为准
+          # git merge -X theirs upstream/main --no-edit
+
+      # 步骤4: 推送更改到您的fork仓库
+      - name: 推送更改
+        run: |
+          # 使用GitHub Actions提供的token进行身份验证
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 推送到您的fork仓库
+          git push origin main
