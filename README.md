@@ -13,7 +13,7 @@
 ## 在线预览
 
 您可以通过以下链接访问在线演示版本：
-[原作者](https://001.123408.xyz/) [自建](https://sex-agreement-app.pages.dev/)
+[原作者](https://001.123408.xyz/) [自建](https://intimate-agree.vercel.app)
 
 ## 功能特性
 
